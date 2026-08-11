@@ -2,7 +2,9 @@ spring:
   application:
     name: spring-project
   config:
-    import: optional:file:.env[.properties]
+    import:
+      - optional:file:.env[.properties]
+      - optional:file:./spring-project/.env[.properties]
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
