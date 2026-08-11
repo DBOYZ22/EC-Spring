@@ -1,5 +1,9 @@
 spring:
   application:
     name: spring-project
-  datasorce:
-    url: jdbc:postgresql://db.eyudddjiifknbtbejmas.supabase.co:5432/postgres
+  config:
+    import: optional:file:.env[.properties]
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
