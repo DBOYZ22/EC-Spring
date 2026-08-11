@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: spring-project
+  datasorce:
+    url: jdbc:postgresql://db.eyudddjiifknbtbejmas.supabase.co:5432/postgres
