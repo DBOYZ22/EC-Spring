@@ -29,7 +29,7 @@ public class OrderDetails {
   private String productName;
 
   @Column(name = "price", nullable = false)
-  private int quantity;
+  private int price;
 
   @Column(name = "created_at", nullable = false, updatable = false)
   @CreationTimestamp
@@ -44,11 +44,11 @@ public class OrderDetails {
   }
 
   // Prameterized constructor
-  public OrderDetails(String orderNumber, int productId, String productName, int quantity) {
+  public OrderDetails(String orderNumber, int productId, String productName, int price) {
     this.orderNumber = orderNumber;
     this.productId = productId;
     this.productName = productName;
-    this.quantity = quantity;
+    this.price = price;
   }
 
   // getters
@@ -68,8 +68,8 @@ public class OrderDetails {
     return productName;
   }
 
-  public int getQuantity() {
-    return quantity;
+  public int getPrice() {
+    return price;
   }
 
   public LocalDateTime getCreatedAt() {
@@ -80,6 +80,7 @@ public class OrderDetails {
     return updatedAt;
   }
 
+  // Setters
   public void setId(Long id) {
     this.id = id;
   }
@@ -96,8 +97,8 @@ public class OrderDetails {
     this.productName = productName;
   }
 
-  public void setQuantity(int quantity) {
-    this.quantity = quantity;
+  public void setPrice(int price) {
+    this.price = price;
   }
 
   public void setCreatedAt(LocalDateTime createdAt) {
@@ -108,5 +109,3 @@ public class OrderDetails {
     this.updatedAt = updatedAt;
   }
 }
-
-// Setters
