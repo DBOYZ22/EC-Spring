@@ -1,15 +1,23 @@
 package com.dboyz.spring_project.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dboyz.spring_project.dto.OrderDTO;
+import com.dboyz.spring_project.dto.OrderHistoryResponse;
 import com.dboyz.spring_project.dto.OrderItem;
 import com.dboyz.spring_project.dto.OrderRequest;
 import com.dboyz.spring_project.dto.OrderResponse;
+import com.dboyz.spring_project.dto.PageableDTO;
 import com.dboyz.spring_project.entity.OrderDetails;
 import com.dboyz.spring_project.entity.OrderHistory;
 import com.dboyz.spring_project.repository.OrderDetailsRepository;
@@ -71,4 +79,43 @@ public class OrderService {
     return totalPrice / 100; // Example: 1 point for every $10 spent
   }
 
+  public OrderHistoryResponse getOrderHistory(UUID userId, int page, int size) {
+    PageRequest pagerequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "orderDate"));
+    Page<OrderHistory> orderHistoryPage = orderRepository.findByUserId(userId, pagerequest);
+
+    List<OrderDTO> orderDTOs = orderHistoryPage.getContent().stream()
+        .map(this::convertToOrderDTO)
+        .collect(Collectors.toList());
+
+    PageableDTO pageableDTO = new PageableDTO(
+        orderHistoryPage.getNumber(),
+        orderHistoryPage.getSize(),
+        orderHistoryPage.getTotalElements(),
+        orderHistoryPage.getTotalPages());
+
+    return new OrderHistoryResponse(orderDTOs, pageableDTO);
+
+  }
+
+  private OrderDTO convertToOrderDTO(OrderHistory orderHistory) {
+    List<OrderDetails> orderDetails = orderDetailsRepository.findByOrderNumber(orderHistory.getOrderNumber());
+
+    List<OrderItem> orderItems = orderDetails.stream()
+        .map(this::convertToOrderItem)
+        .collect(Collectors.toList());
+
+    return new OrderDTO(
+        orderHistory.getOrderDate().toString(),
+        orderHistory.getOrderNumber(),
+        orderHistory.getTotalPrice(),
+        orderHistory.getTotalQuantity(),
+        orderItems);
+  }
+
+  private OrderItem convertToOrderItem(OrderDetails orderDetails) {
+    return new OrderItem(
+        orderDetails.getProductId(),
+        orderDetails.getProductName(),
+        orderDetails.getPrice());
+  }
 }
