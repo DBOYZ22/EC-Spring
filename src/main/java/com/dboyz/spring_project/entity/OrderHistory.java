@@ -1,7 +1,7 @@
 package com.dboyz.spring_project.entity;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
